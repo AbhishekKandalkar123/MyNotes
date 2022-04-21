@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mynotes/constants/routes.dart';
 import 'package:mynotes/views/login_view.dart';
 import 'package:mynotes/views/register_view.dart';
 import 'package:mynotes/views/verify_email_view.dart';
@@ -15,9 +16,9 @@ void main() {
       ),
       home: const HomePage(),
       routes: {
-        '/login/':(context)=>const LoginView(),
-        '/register/':(context)=>const RegisterView(),
-        '/notes/':(context)=>const NotesView(),
+        loginRoute:(context)=>const LoginView(),
+        registerRoute:(context)=>const RegisterView(),
+        notesRoute:(context)=>const NotesView(),
       },
     ),
   );
@@ -29,7 +30,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Firebase.initializeApp(),
+      future: Firebase.initializeApp() ,
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.done:
@@ -58,7 +59,7 @@ class NotesView extends StatefulWidget {
   const NotesView({Key? key}) : super(key: key);
 
   @override
-  State<NotesView> createState() => _NotesViewState();
+  _NotesViewState createState() => _NotesViewState();
 }
 
 class _NotesViewState extends State<NotesView> {
@@ -75,7 +76,9 @@ class _NotesViewState extends State<NotesView> {
                   final shouldLogout = await showLogOutDialog(context);
                   if(shouldLogout){
                     await FirebaseAuth.instance.signOut();
-                    Navigator.of(context).pushNamedAndRemoveUntil('/login/', (_) => false,
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      loginRoute,
+                          (_) => false,
                     );
                   }
               }
